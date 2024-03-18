@@ -11,7 +11,7 @@ import EditableDiv from "../common/EditableDiv";
 
 const TitleContainer = () => {
   const dispatch = useDispatch();
-  const { isFocused } = useSelector((state: RootState) => state.title);
+  const { title, isFocused } = useSelector((state: RootState) => state.title);
 
   const handleTitleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
@@ -54,7 +54,7 @@ const TitleContainer = () => {
               }
         }
       >
-        제목 없는 설문지
+        {title}
       </EditableDiv>
       {/* @NOTE: 설문지 설명 */}
       <EditableDiv

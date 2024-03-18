@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import FloatingButtons from "../form/FloatingButtons";
 
 interface IBasicForm {
   isTitleComponent: boolean;
   isFocused?: boolean;
   style?: React.CSSProperties;
   children: React.ReactNode;
-  onFocus: (e: React.FocusEvent<HTMLElement>) => void;
+  onFocus: (e: React.FocusEvent) => void;
 }
 
 const BasicForm = ({
@@ -23,7 +22,6 @@ const BasicForm = ({
         <SideBar $isTitleComponent={isTitleComponent} $isFocused={isFocused} />
         <Contents>{children}</Contents>
       </Form>
-      {isFocused && <FloatingButtons />}
     </>
   );
 };

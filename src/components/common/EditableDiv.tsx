@@ -3,7 +3,7 @@ import styled from "styled-components";
 interface IEditableDiv {
   placeholder?: string;
   contentEditable: boolean;
-  onBlur?: (e: React.FormEvent<HTMLDivElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }
@@ -38,6 +38,7 @@ const Div = styled.div<IEditableDiv>`
   outline: none;
   border-bottom: 1px solid lightgray;
   transition: border-bottom 0.3s ease-in-out;
+  cursor: text;
 
   &:focus {
     border-bottom: 2px solid #673ab7;
