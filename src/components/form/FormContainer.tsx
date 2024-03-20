@@ -73,37 +73,32 @@ const FormContainer = () => {
         )}
         {/* @NOTE: 옵션 섹션 - 답변 타입이 객관식 질문, 체크박스, 드롭다운인 경우 */}
         {question.optionList.map((option, optionIndex) => {
-          if (
-            question.type === "dropdown" &&
-            question.hasETC &&
-            option.text === "기타"
-          ) {
+          if (question.type === "dropdown" && question.hasETC && option.isETC) {
             return null;
           }
-          return (
-            ["radio", "checkbox", "dropdown"].includes(question.type) && (
-              <DragDrop
-                key={option.id}
-                mode="vertical"
-                draggable={option.text !== "기타"}
-                isFocused={question.isFocused && option.text !== "기타"}
-                onDragStart={(e) => handleDragStart(e, index, optionIndex)}
-                onDrop={(e) => handleDrop(e, index, optionIndex)}
-              >
-                <ChoiceInputs
-                  key={option.id}
-                  index={index}
-                  optionIndex={optionIndex}
-                  editableMode={"edit"}
-                  dropdownMode={"edit"}
-                  type={question.type}
-                  optionText={option.text}
-                  isFocused={question.isFocused}
-                  hasETC={question.hasETC}
-                />
-              </DragDrop>
-            )
-          );
+          return ["radio", "checkbox", "dropdown"].includes(question.type) ? (
+            <DragDrop
+              key={`${question.id}-${option.id}`}
+              mode="vertical"
+              draggable={!option.isETC}
+              isFocused={question.isFocused && !option.isETC}
+              onDragStart={(e) => handleDragStart(e, index, optionIndex)}
+              onDrop={(e) => handleDrop(e, index, optionIndex)}
+            >
+              <ChoiceInputs
+                key={`${question.id}-${option.id}`}
+                index={index}
+                optionIndex={optionIndex}
+                editableMode={"edit"}
+                dropdownMode={"edit"}
+                type={question.type}
+                optionText={option.text}
+                isFocused={question.isFocused}
+                hasETC={question.hasETC}
+                isETC={option.isETC}
+              />
+            </DragDrop>
+          ) : null;
         })}
         {/* @NOTE: 옵션 추가 또는 기타 추가 */}
         {question.isFocused &&

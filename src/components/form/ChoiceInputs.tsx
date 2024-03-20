@@ -19,6 +19,7 @@ interface IChoiceInputs {
   editableMode: "edit" | "read";
   dropdownMode: "add" | "edit";
   hasETC: boolean;
+  isETC?: boolean;
   optionText?: string;
   isFocused: boolean;
 }
@@ -30,6 +31,7 @@ const ChoiceInputs = ({
   editableMode,
   dropdownMode,
   hasETC,
+  isETC,
   optionText,
   isFocused,
 }: IChoiceInputs) => {
@@ -75,15 +77,13 @@ const ChoiceInputs = ({
         hasETC={hasETC}
       />
       <EditableDiv
-        contentEditable={
-          editableMode === "edit" && isFocused && optionText !== "기타"
-        }
+        contentEditable={editableMode === "edit" && isFocused && !isETC}
         onBlur={(e) => handleOptionContent(e, index, optionIndex!)}
         style={{
           ...(editableMode === "read" || !isFocused
             ? { borderBottom: "none" }
             : {}),
-          ...(optionText === "기타"
+          ...(isETC && isFocused
             ? { borderBottom: "1px dotted lightgray", cursor: "default" }
             : {}),
         }}
@@ -110,13 +110,18 @@ const ChoiceInputs = ({
         </OptionText>
       </EditableDiv>
       {/* @NOTE: 옵션 삭제 버튼 */}
-      {dropdownMode === "edit" && isFocused && optionListLength > 1 && (
-        <IconWrapper
-          Icon={IoClose}
-          onClick={() => handleDeleteOption(index, optionIndex!)}
-          style={{ color: "gray", fontSize: "22px" }}
-        />
-      )}
+      {dropdownMode === "edit" &&
+        isFocused &&
+        !(
+          (optionListLength === 1 && !hasETC) ||
+          (optionListLength === 2 && hasETC && !isETC)
+        ) && (
+          <IconWrapper
+            Icon={IoClose}
+            onClick={() => handleDeleteOption(index, optionIndex!)}
+            style={{ color: "gray", fontSize: "22px" }}
+          />
+        )}
     </Choice>
   );
 };
@@ -134,7 +139,6 @@ const Choice = styled.div`
 const OptionText = styled.div`
   font-size: 14px;
   padding: 10px 0;
-  margin-top: 3px;
 `;
 
 const AddOption = styled.div`

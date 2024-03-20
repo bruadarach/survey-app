@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface Option {
   id: number;
   text: string;
+  isETC?: boolean;
 }
 
 interface Question {
@@ -32,7 +33,7 @@ export const initialState: IQuestionListProps = {
       id: Date.now(),
       title: "제목없는 질문",
       type: "radio",
-      optionList: [{ id: Date.now(), text: "옵션 1" }],
+      optionList: [{ id: Date.now(), text: "옵션 1", isETC: false }],
       hasETC: false,
       isRequired: false,
       isFocused: true,
@@ -59,6 +60,7 @@ export const questionSlice = createSlice({
           {
             id: Date.now(),
             text: "옵션 1",
+            isETC: false,
           },
         ],
         hasETC: false,
@@ -118,6 +120,7 @@ export const questionSlice = createSlice({
       const newOption = {
         id: Date.now(),
         text: `옵션 ${insertIndex + 1}`,
+        isETC: false,
       };
       question.optionList.splice(insertIndex, 0, newOption);
     },
@@ -128,14 +131,14 @@ export const questionSlice = createSlice({
         question.optionList.push({
           id: Date.now(),
           text: "기타",
+          isETC: true,
         });
         question.hasETC = true;
       }
     },
     deleteOption(state, action) {
       const { index, optionIndex } = action.payload;
-      const isETCOption =
-        state.questions[index].optionList[optionIndex].text === "기타";
+      const isETCOption = state.questions[index].optionList[optionIndex].isETC;
       state.questions[index].optionList.splice(optionIndex, 1);
       if (isETCOption) state.questions[index].hasETC = false;
     },
@@ -180,7 +183,10 @@ export const questionSlice = createSlice({
           state.questions.splice(questionDropIndex, 0, item);
         }
         // @NOTE: 옵션폼 드래그 앤 드롭
-        if (state.dragInfo.optionDragIndex !== undefined) {
+        if (
+          state.dragInfo.optionDragIndex !== undefined &&
+          !state.questions[questionDragIndex].optionList[optionDropIndex].isETC
+        ) {
           const optionDragIndex = state.dragInfo.optionDragIndex;
           const item =
             state.questions[questionDragIndex].optionList[optionDragIndex];
