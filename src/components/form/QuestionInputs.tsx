@@ -67,4 +67,9 @@ const Container = styled.section`
   & > div:last-child {
     flex: 1;
   }
+
+  @media (max-width: 950px) {
+    flex-direction: column;
+    gap: 15px;
+  }
 `;

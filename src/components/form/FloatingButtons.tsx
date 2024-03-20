@@ -56,4 +56,16 @@ const Container = styled.div`
   padding: 15px 10px;
   gap: 10px;
   z-index: 9;
+
+  @media (max-width: 950px) {
+    position: fixed;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    top: auto;
+    width: 30%;
+    flex-direction: row;
+    gap: 20px;
+  }
 `;
