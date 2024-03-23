@@ -9,7 +9,7 @@ interface ITitleProps {
 const initialState: ITitleProps = {
   title: "제목 없는 설문지",
   desc: "설문지 설명",
-  isFocused: true,
+  isFocused: false,
 };
 
 export const titleSlice = createSlice({
