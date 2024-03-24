@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 interface IBasicForm {
+  pageMode: "survey" | "preview";
   isTitleComponent: boolean;
   isFocused?: boolean;
   style?: React.CSSProperties;
@@ -9,6 +10,7 @@ interface IBasicForm {
 }
 
 const BasicForm = ({
+  pageMode,
   isTitleComponent = false,
   isFocused = false,
   onFocus,
@@ -16,13 +18,14 @@ const BasicForm = ({
   children,
 }: IBasicForm) => {
   return (
-    <>
-      <Form tabIndex={0} onFocus={onFocus} style={style}>
-        <HeaderBar $isTitleComponent={isTitleComponent} />
-        <SideBar $isTitleComponent={isTitleComponent} $isFocused={isFocused} />
-        <Contents>{children}</Contents>
-      </Form>
-    </>
+    <Form tabIndex={0} onFocus={onFocus} style={style}>
+      <HeaderBar $isTitleComponent={isTitleComponent} />
+      <SideBar
+        $isTitleComponent={isTitleComponent}
+        $isFocused={pageMode === "survey" && isFocused}
+      />
+      <Contents>{children}</Contents>
+    </Form>
   );
 };
 
