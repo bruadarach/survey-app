@@ -54,16 +54,19 @@ const Tools = ({ index, isRequired }: ITools) => {
 
   return (
     <Container>
+      {/* @NOTE: 질문폼 복사 */}
       <IconWrapper
         Icon={FaRegCopy}
         onClick={() => handleCopyQuestion(index)}
         style={{ color: "gray", fontSize: "20px" }}
       />
+      {/* @NOTE: 질문폼 삭제 */}
       <IconWrapper
         Icon={RiDeleteBinLine}
         onClick={() => handleDeleteQuestion(index)}
         style={{ color: "gray", fontSize: "23px" }}
       />
+      {/* @NOTE: 질문폼 필수여부 토글 */}
       <Required>
         <span>필수</span>
         <ToggleButton onClick={handleRequired} isRequired={isRequired} />

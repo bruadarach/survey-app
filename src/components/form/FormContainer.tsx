@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setIsTitleFocused } from "../../redux/reducers/titleSlice";
@@ -6,6 +7,7 @@ import {
   setIsQuestionFocused,
   setDragIndex,
   setDND,
+  resetResponses,
 } from "../../redux/reducers/questionSlice";
 import DragDrop from "../common/DragDrop";
 import BasicForm from "../common/BasicForm";
@@ -14,10 +16,20 @@ import TextInputs from "./TextInputs";
 import ChoiceInputs from "./ChoiceInputs";
 import Tools from "./Tools";
 import FloatingButtons from "./FloatingButtons";
+import SelectBox from "./SelectBox";
+import WarningMessage from "./WarningMessage";
 
-const FormContainer = () => {
+interface IFormContainer {
+  pageMode: "survey" | "preview";
+}
+
+const FormContainer = ({ pageMode }: IFormContainer) => {
   const dispatch = useDispatch();
   const questions = useSelector((state: RootState) => state.question.questions);
+
+  useEffect(() => {
+    if (pageMode === "survey") dispatch(resetResponses());
+  }, [pageMode]);
 
   const handleFormFocus = (index: number) => {
     dispatch(setIsTitleFocused(false));
@@ -50,26 +62,42 @@ const FormContainer = () => {
   return questions.map((question, index: number) => (
     <DragDrop
       key={question.id}
-      mode="horizontal"
+      pageMode={pageMode}
+      mode={"horizontal"}
       isFocused={question.isFocused}
       onDragStart={(e) => handleDragStart(e, index, undefined)}
       onDrop={(e) => handleDrop(e, index, undefined)}
     >
       <BasicForm
         key={question.id}
+        pageMode={pageMode}
         isTitleComponent={false}
         isFocused={question.isFocused}
         onFocus={() => handleFormFocus(index)}
+        style={
+          pageMode === "preview" &&
+          question.isRequired &&
+          !question.isResponseSufficient
+            ? { border: "1px solid red" }
+            : {}
+        }
       >
         {/* @NOTE: 질문 섹션 */}
         <QuestionInputs
           index={index}
+          pageMode={pageMode}
           type={question.type}
           isFocused={question.isFocused}
+          isRequired={question.isRequired}
         />
         {/* @NOTE: 옵션 섹션 - 답변 타입이 단답형 또는 장문형 텍스트인 경우 */}
         {["textShort", "textLong"].includes(question.type) && (
-          <TextInputs type={question.type} />
+          <TextInputs
+            index={index}
+            pageMode={pageMode}
+            type={question.type}
+            isFocused={question.isFocused}
+          />
         )}
         {/* @NOTE: 옵션 섹션 - 답변 타입이 객관식 질문, 체크박스, 드롭다운인 경우 */}
         {question.optionList.map((option, optionIndex) => {
@@ -79,29 +107,41 @@ const FormContainer = () => {
           return ["radio", "checkbox", "dropdown"].includes(question.type) ? (
             <DragDrop
               key={`${question.id}-${option.id}`}
-              mode="vertical"
+              pageMode={pageMode}
+              mode={"vertical"}
               draggable={!option.isETC}
               isFocused={question.isFocused && !option.isETC}
               onDragStart={(e) => handleDragStart(e, index, optionIndex)}
               onDrop={(e) => handleDrop(e, index, optionIndex)}
+              style={
+                pageMode === "preview" && question.type === "dropdown"
+                  ? { display: "none" }
+                  : {}
+              }
             >
               <ChoiceInputs
                 key={`${question.id}-${option.id}`}
                 index={index}
                 optionIndex={optionIndex}
-                editableMode={"edit"}
+                pageMode={pageMode}
+                editableMode={pageMode === "survey" ? "edit" : "read"}
                 dropdownMode={"edit"}
                 type={question.type}
                 optionText={option.text}
-                isFocused={question.isFocused}
+                isFocused={pageMode === "survey" && question.isFocused}
                 hasETC={question.hasETC}
                 isETC={option.isETC}
               />
             </DragDrop>
           ) : null;
         })}
+        {/* @NOTE: 옵션 섹션 - (Preview Page) 답변 타입이 드롭다운인 경우 */}
+        {pageMode === "preview" && question.type === "dropdown" && (
+          <SelectBox index={index} type={question.type} pageMode={pageMode} />
+        )}
         {/* @NOTE: 옵션 추가 또는 기타 추가 */}
-        {question.isFocused &&
+        {pageMode === "survey" &&
+          question.isFocused &&
           ["radio", "checkbox", "dropdown"].includes(question.type) && (
             <ChoiceInputs
               index={index}
@@ -110,15 +150,23 @@ const FormContainer = () => {
               type={question.type}
               isFocused={question.isFocused}
               hasETC={question.hasETC}
+              pageMode={pageMode}
+              optionText={""}
             />
           )}
+        {/* @NOTE: 필수 질문 에러 메세지 */}
+        {pageMode === "preview" &&
+          question.isRequired &&
+          !question.isResponseSufficient && <WarningMessage />}
         {/* @NOTE: 도구 섹션 */}
-        {question.isFocused && (
+        {pageMode === "survey" && question.isFocused && (
           <Tools index={index} isRequired={question.isRequired} />
         )}
       </BasicForm>
       {/* @NOTE: 플로팅 버튼 */}
-      {question.isFocused && <FloatingButtons index={index} />}
+      {pageMode === "survey" && question.isFocused && (
+        <FloatingButtons index={index} />
+      )}
     </DragDrop>
   ));
 };

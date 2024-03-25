@@ -5,15 +5,21 @@ import styled from "styled-components";
 import EditableDiv from "../common/EditableDiv";
 import SelectBox from "./SelectBox";
 
-const QuestionInputs = ({
-  index,
-  type,
-  isFocused,
-}: {
+interface IQuestionInputs {
   index: number;
+  pageMode: "survey" | "preview";
   type: string;
   isFocused: boolean;
-}) => {
+  isRequired: boolean;
+}
+
+const QuestionInputs = ({
+  index,
+  pageMode,
+  type,
+  isFocused,
+  isRequired,
+}: IQuestionInputs) => {
   const dispatch = useDispatch();
   const { title } = useSelector(
     (state: RootState) => state.question.questions[index]
@@ -28,10 +34,10 @@ const QuestionInputs = ({
     <Container>
       <EditableDiv
         placeholder="질문"
-        contentEditable={isFocused}
+        contentEditable={pageMode === "survey" && isFocused}
         onBlur={handleTitleInput}
         style={
-          isFocused
+          pageMode === "survey" && isFocused
             ? {
                 fontSize: "16px",
                 fontWeight: "500",
@@ -45,9 +51,14 @@ const QuestionInputs = ({
               }
         }
       >
-        {title}
+        {title}{" "}
+        {pageMode === "preview" && isRequired && (
+          <span style={{ color: "red" }}>*</span>
+        )}
       </EditableDiv>
-      {isFocused && <SelectBox index={index} type={type} />}
+      {pageMode === "survey" && isFocused && (
+        <SelectBox index={index} type={type} pageMode="survey" />
+      )}
     </Container>
   );
 };

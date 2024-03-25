@@ -1,19 +1,63 @@
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setTextResponse } from "../../redux/reducers/questionSlice";
 import EditableDiv from "../common/EditableDiv";
 
-const TextInputs = ({ type }: { type: string }) => {
+interface ITextInputs {
+  index: number;
+  pageMode: "survey" | "preview";
+  type: string;
+  isFocused: boolean;
+}
+
+const TextInputs = ({ index, pageMode, type, isFocused }: ITextInputs) => {
+  const dispatch = useDispatch();
+  const textResponse = useSelector(
+    (state: RootState) => state.question.questions[index].responses[0] || ""
+  );
+
+  const handleTextResponse = (e: React.FocusEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    dispatch(
+      setTextResponse({
+        index: index,
+        text: target.textContent || "",
+      })
+    );
+  };
+
   return (
     <>
       <EditableDiv
         placeholder={type === "textShort" ? "단답형 텍스트" : "장문형 텍스트"}
-        contentEditable={false}
+        contentEditable={pageMode === "survey" ? false : true}
+        onBlur={pageMode === "preview" ? handleTextResponse : undefined}
         style={{
-          color: "#555",
-          fontSize: "14px",
-          borderBottom: "1px dotted #999",
-          padding: "10px 0 5px 2px",
-          width: type === "textShort" ? "50%" : "85%",
+          ...(pageMode === "survey" && {
+            color: "#555",
+            fontSize: "14px",
+            borderBottom: "1px dotted #999",
+            padding: "10px 0 5px 2px",
+            width: type === "textShort" ? "50%" : "85%",
+          }),
+          ...(pageMode === "preview"
+            ? isFocused
+              ? {
+                  fontSize: "14px",
+                  marginTop: "15px",
+                  width: type === "textShort" ? "50%" : "100%",
+                }
+              : {
+                  fontSize: "14px",
+                  marginTop: "15px",
+                  borderBottom: "1px solid lightgray",
+                  width: type === "textShort" ? "50%" : "100%",
+                }
+            : {}),
         }}
-      />
+      >
+        {pageMode === "preview" && textResponse}
+      </EditableDiv>
     </>
   );
 };

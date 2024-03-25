@@ -16,11 +16,12 @@ interface IChoiceInputs {
   index: number;
   optionIndex?: number;
   type: string;
+  pageMode: "survey" | "preview";
   editableMode: "edit" | "read";
   dropdownMode: "add" | "edit";
   hasETC: boolean;
   isETC?: boolean;
-  optionText?: string;
+  optionText: string;
   isFocused: boolean;
 }
 
@@ -28,6 +29,7 @@ const ChoiceInputs = ({
   index,
   optionIndex,
   type,
+  pageMode,
   editableMode,
   dropdownMode,
   hasETC,
@@ -72,9 +74,12 @@ const ChoiceInputs = ({
       {/* @NOTE: 옵션 아이콘 */}
       <ChoiceTypeIcon
         type={type}
+        index={index}
         optionIndex={optionIndex}
         dropdownMode={dropdownMode}
+        pageMode={pageMode}
         hasETC={hasETC}
+        optionText={optionText}
       />
       <EditableDiv
         contentEditable={editableMode === "edit" && isFocused && !isETC}
@@ -85,6 +90,9 @@ const ChoiceInputs = ({
             : {}),
           ...(isETC && isFocused
             ? { borderBottom: "1px dotted lightgray", cursor: "default" }
+            : {}),
+          ...(pageMode === "preview" && type === "dropdown"
+            ? { display: "none", paddingTop: "0px" }
             : {}),
         }}
       >

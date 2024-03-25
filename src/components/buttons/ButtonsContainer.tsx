@@ -1,10 +1,29 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetResponses } from "../../redux/reducers/questionSlice";
 import styled from "styled-components";
 
 const ButtonsContainer = ({ pageMode }: { pageMode: "survey" | "preview" }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const navigateToSubmit = () => {
+    navigate("/submit");
+  };
+
+  const handleResetResponses = () => {
+    const isConfirmed = window.confirm(
+      "양식을 지우시겠습니까?\n모든 질문에서 답변이 삭제되며 되돌릴 수 없습니다."
+    );
+    if (isConfirmed) {
+      dispatch(resetResponses());
+    }
+  };
+
   return (
     <Container $pageMode={pageMode}>
-      <Button>제출</Button>
-      <NoBgButton>양식 지우기</NoBgButton>
+      <Button onClick={navigateToSubmit}>제출</Button>
+      <NoBgButton onClick={handleResetResponses}>양식 지우기</NoBgButton>
     </Container>
   );
 };
