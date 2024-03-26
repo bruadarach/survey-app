@@ -11,13 +11,13 @@ import {
 } from "../../redux/reducers/questionSlice";
 import DragDrop from "../common/DragDrop";
 import BasicForm from "../common/BasicForm";
-import QuestionInputs from "./QuestionInputs";
-import TextInputs from "./TextInputs";
-import ChoiceInputs from "./ChoiceInputs";
-import Tools from "./Tools";
-import FloatingButtons from "./FloatingButtons";
-import SelectBox from "./SelectBox";
-import WarningMessage from "./WarningMessage";
+import QuestionInputs from "../form/QuestionInputs";
+import TextInputs from "../form/TextInputs";
+import ChoiceInputs from "../form/ChoiceInputs";
+import Tools from "../form/Tools";
+import FloatingButtons from "../form/FloatingButtons";
+import SelectBox from "../form/SelectBox";
+import WarningMessage from "../form/WarningMessage";
 
 interface IFormContainer {
   pageMode: "survey" | "preview";

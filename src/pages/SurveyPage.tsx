@@ -1,7 +1,7 @@
 import Layout from "../components/layout/Layout";
-import TitleContainer from "../components/title/TitleContainer";
-import FormContainer from "../components/form/FormContainer";
-import ButtonsContainer from "../components/buttons/ButtonsContainer";
+import TitleContainer from "../components/containers/TitleContainer";
+import FormContainer from "../components/containers/FormContainer";
+import ButtonsContainer from "../components/containers/ButtonsContainer";
 
 const SurveyPage = ({ pageMode }: { pageMode: "survey" | "preview" }) => {
   return (
