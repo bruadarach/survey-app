@@ -9,7 +9,7 @@ import {
 import styled from "styled-components";
 import ChoiceTypeIcon from "./ChoiceTypeIcon";
 import EditableDiv from "../common/EditableDiv";
-import IconWrapper from "../common/IconWrapper";
+import IconClick from "../common/IconClick";
 import { IoClose } from "react-icons/io5";
 
 interface IChoiceInputs {
@@ -124,7 +124,7 @@ const ChoiceInputs = ({
           (optionListLength === 1 && !hasETC) ||
           (optionListLength === 2 && hasETC && !isETC)
         ) && (
-          <IconWrapper
+          <IconClick
             Icon={IoClose}
             onClick={() => handleDeleteOption(index, optionIndex!)}
             style={{ color: "gray", fontSize: "22px" }}

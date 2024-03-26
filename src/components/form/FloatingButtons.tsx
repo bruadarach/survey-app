@@ -6,7 +6,7 @@ import {
 } from "../../redux/reducers/questionSlice";
 import { setIsTitleFocused } from "../../redux/reducers/titleSlice";
 import styled from "styled-components";
-import IconWrapper from "../common/IconWrapper";
+import IconClick from "../common/IconClick";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
@@ -26,12 +26,12 @@ const FloatingButtons = ({ index }: { index: number }) => {
 
   return (
     <Container>
-      <IconWrapper
+      <IconClick
         Icon={IoMdAddCircleOutline}
         onClick={() => handleAddQuestion(index)}
         style={{ color: "gray", fontSize: "24px" }}
       />
-      <IconWrapper
+      <IconClick
         Icon={MdOutlineRemoveRedEye}
         onClick={navigateToPreview}
         style={{ color: "gray", fontSize: "24px" }}

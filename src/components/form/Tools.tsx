@@ -9,7 +9,7 @@ import {
   toggleRequired,
 } from "../../redux/reducers/questionSlice";
 import styled from "styled-components";
-import IconWrapper from "../common/IconWrapper";
+import IconClick from "../common/IconClick";
 import ToggleButton from "./ToggleButton";
 import { FaRegCopy } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -55,13 +55,13 @@ const Tools = ({ index, isRequired }: ITools) => {
   return (
     <Container>
       {/* @NOTE: 질문폼 복사 */}
-      <IconWrapper
+      <IconClick
         Icon={FaRegCopy}
         onClick={() => handleCopyQuestion(index)}
         style={{ color: "gray", fontSize: "20px" }}
       />
       {/* @NOTE: 질문폼 삭제 */}
-      <IconWrapper
+      <IconClick
         Icon={RiDeleteBinLine}
         onClick={() => handleDeleteQuestion(index)}
         style={{ color: "gray", fontSize: "23px" }}
