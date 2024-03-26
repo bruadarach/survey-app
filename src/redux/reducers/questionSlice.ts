@@ -15,6 +15,7 @@ interface Question {
   isRequired: boolean;
   isFocused: boolean;
   responses: string[];
+  isResponseSufficient?: boolean;
 }
 
 interface DragInfo {
@@ -38,6 +39,7 @@ export const initialState: IQuestionListProps = {
       isRequired: false,
       isFocused: true,
       responses: [],
+      isResponseSufficient: true,
     },
   ],
   dragInfo: {
@@ -67,6 +69,7 @@ export const questionSlice = createSlice({
         isRequired: false,
         isFocused: true,
         responses: [],
+        isResponseSufficient: true,
       };
       state.questions.splice(index + 1, 0, defaultQuestion);
     },
@@ -153,20 +156,59 @@ export const questionSlice = createSlice({
     },
     setTextResponse(state, action) {
       const { index, text } = action.payload;
-      state.questions[index].responses[0] = text;
+      const question = state.questions[index];
+      if (question.isRequired && text.trim() === "") {
+        question.isResponseSufficient = false;
+      } else {
+        question.responses[0] = text;
+        question.isResponseSufficient = true;
+      }
     },
     setSingleChoiceResponse(state, action) {
       const { index, value } = action.payload;
       state.questions[index].responses[0] = value;
+      state.questions[index].isResponseSufficient = true;
     },
     setMultipleChoiceResponse(state, action) {
       const { index, value, checked } = action.payload;
+      const responseIndex = state.questions[index].responses.indexOf(value);
       if (checked) {
-        state.questions[index].responses.push(value);
-      } else
-        state.questions[index].responses = state.questions[
-          index
-        ].responses.splice(state.questions[index].responses.indexOf(value), 1);
+        if (responseIndex === -1) {
+          state.questions[index].responses.push(value);
+          state.questions[index].isResponseSufficient = true;
+        }
+      } else {
+        if (responseIndex !== -1) {
+          state.questions[index].responses.splice(responseIndex, 1);
+          if (state.questions[index].responses.length === 0)
+            state.questions[index].isResponseSufficient = false;
+        }
+      }
+    },
+    checkResponseSufficient(state) {
+      state.questions.forEach((question) => {
+        if (question.isRequired) {
+          if (question.type === "textShort" || question.type === "textLong") {
+            if (!question.responses[0] || question.responses[0].trim() === "") {
+              question.isResponseSufficient = false;
+            } else {
+              question.isResponseSufficient = true;
+            }
+          } else {
+            if (question.responses.length === 0) {
+              question.isResponseSufficient = false;
+            } else {
+              question.isResponseSufficient = true;
+            }
+          }
+        }
+      });
+    },
+    resetResponses(state) {
+      state.questions.forEach((question) => {
+        question.responses = [];
+        question.isResponseSufficient = true;
+      });
     },
     setDragIndex(state, action) {
       const { questionDragIndex, optionDragIndex } = action.payload;
@@ -221,6 +263,8 @@ export const {
   setTextResponse,
   setSingleChoiceResponse,
   setMultipleChoiceResponse,
+  checkResponseSufficient,
+  resetResponses,
   setDragIndex,
   setDND,
 } = questionSlice.actions;
