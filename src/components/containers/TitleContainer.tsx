@@ -11,7 +11,7 @@ import EditableDiv from "../common/EditableDiv";
 import FloatingButtons from "../form/FloatingButtons";
 
 interface ITitleContainer {
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
 }
 
 const TitleContainer = ({ pageMode }: ITitleContainer) => {

@@ -5,7 +5,7 @@ import EditableDiv from "../common/EditableDiv";
 
 interface ITextInputs {
   index: number;
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   type: string;
   isFocused: boolean;
 }
@@ -30,7 +30,9 @@ const TextInputs = ({ index, pageMode, type, isFocused }: ITextInputs) => {
     <>
       <EditableDiv
         placeholder={type === "textShort" ? "단답형 텍스트" : "장문형 텍스트"}
-        contentEditable={pageMode === "survey" ? false : true}
+        contentEditable={
+          pageMode === "survey" || pageMode === "submit" ? false : true
+        }
         onBlur={pageMode === "preview" ? handleTextResponse : undefined}
         style={{
           ...(pageMode === "survey" && {
@@ -54,9 +56,12 @@ const TextInputs = ({ index, pageMode, type, isFocused }: ITextInputs) => {
                   width: type === "textShort" ? "50%" : "100%",
                 }
             : {}),
+          ...(pageMode === "submit" && {
+            borderBottom: "1px solid lightgray",
+          }),
         }}
       >
-        {pageMode === "preview" && textResponse}
+        {(pageMode === "preview" || pageMode === "submit") && textResponse.text}
       </EditableDiv>
     </>
   );

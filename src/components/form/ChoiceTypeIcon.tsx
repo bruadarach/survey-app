@@ -6,16 +6,18 @@ import {
 } from "../../redux/reducers/questionSlice";
 
 interface IChoiceTypeIcon {
+  optionId?: number;
   type: string;
   index?: number;
   optionIndex?: number;
   dropdownMode?: "add" | "edit";
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   hasETC: boolean;
   optionText: string;
 }
 
 const ChoiceTypeIcon = ({
+  optionId,
   type,
   index,
   optionIndex,
@@ -31,20 +33,22 @@ const ChoiceTypeIcon = ({
   const responses = useSelector(
     (state: RootState) => state.question.questions[index || 0].responses
   );
-  const isCheckedForRadio = type === "radio" && responses.includes(optionText);
-  const isCheckedForCheckbox =
-    type === "checkbox" &&
-    responses.some((response) => response === optionText);
+  const isCheckedForRadio = responses.some(
+    (response) => response.id === optionId
+  );
+  const isCheckedForCheckbox = responses.some(
+    (response) => response.id === optionId
+  );
 
   const handleChoiceResponse = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => {
-    console.log("handleChoiceResponse with RADIO", e.target.value);
     if (type === "radio") {
       dispatch(
         setSingleChoiceResponse({
           index,
+          optionId,
           value: e.target.value,
         })
       );
@@ -52,6 +56,7 @@ const ChoiceTypeIcon = ({
       dispatch(
         setMultipleChoiceResponse({
           index,
+          optionId,
           value: e.target.value,
           checked: e.target.checked,
         })
@@ -64,11 +69,11 @@ const ChoiceTypeIcon = ({
       {/* @NOTE: 객관식 질문, 체크박스인 경우 */}
       {["radio", "checkbox"].includes(type) ? (
         <input
-          name={optionIndex?.toString()}
+          name={type === "radio" ? index?.toString() : `${index}-${optionId}`}
           type={type}
           value={optionText || ""}
           checked={
-            pageMode === "preview"
+            pageMode === "preview" || pageMode === "submit"
               ? type === "radio"
                 ? isCheckedForRadio
                 : isCheckedForCheckbox
@@ -79,7 +84,7 @@ const ChoiceTypeIcon = ({
               ? (e) => handleChoiceResponse(e, type)
               : undefined
           }
-          disabled={pageMode === "survey"}
+          disabled={pageMode !== "preview"}
           style={{
             pointerEvents: pageMode === "survey" ? "none" : "auto",
             marginLeft: "7px",

@@ -7,7 +7,7 @@ import SelectBox from "./SelectBox";
 
 interface IQuestionInputs {
   index: number;
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   type: string;
   isFocused: boolean;
   isRequired: boolean;

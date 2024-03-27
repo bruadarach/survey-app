@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { MdDragIndicator } from "react-icons/md";
 
 interface IDragDrop {
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   mode?: "horizontal" | "vertical";
   draggable?: boolean;
   isFocused?: boolean;

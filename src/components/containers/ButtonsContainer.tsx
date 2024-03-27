@@ -9,7 +9,11 @@ import styled from "styled-components";
 import IconClick from "../common/IconClick";
 import { GoPencil } from "react-icons/go";
 
-const ButtonsContainer = ({ pageMode }: { pageMode: "survey" | "preview" }) => {
+const ButtonsContainer = ({
+  pageMode,
+}: {
+  pageMode: "survey" | "preview" | "submit";
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const missingRequiredResponses = useSelector(
@@ -67,7 +71,7 @@ const ButtonsContainer = ({ pageMode }: { pageMode: "survey" | "preview" }) => {
 
 export default ButtonsContainer;
 
-const Container = styled.div<{ $pageMode: "survey" | "preview" }>`
+const Container = styled.div<{ $pageMode: "survey" | "preview" | "submit" }>`
   display: ${({ $pageMode }) => ($pageMode === "preview" ? "flex" : "none")};
   width: 100%;
   justify-content: space-between;

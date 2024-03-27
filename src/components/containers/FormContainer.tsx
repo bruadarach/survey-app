@@ -20,7 +20,7 @@ import SelectBox from "../form/SelectBox";
 import WarningMessage from "../form/WarningMessage";
 
 interface IFormContainer {
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
 }
 
 const FormContainer = ({ pageMode }: IFormContainer) => {
@@ -29,7 +29,7 @@ const FormContainer = ({ pageMode }: IFormContainer) => {
 
   useEffect(() => {
     if (pageMode === "survey") dispatch(resetResponses());
-  }, [pageMode]);
+  }, [pageMode, dispatch]);
 
   const handleFormFocus = (index: number) => {
     dispatch(setIsTitleFocused(false));
@@ -121,6 +121,7 @@ const FormContainer = ({ pageMode }: IFormContainer) => {
             >
               <ChoiceInputs
                 key={`${question.id}-${option.id}`}
+                optionId={option.id}
                 index={index}
                 optionIndex={optionIndex}
                 pageMode={pageMode}
@@ -135,15 +136,20 @@ const FormContainer = ({ pageMode }: IFormContainer) => {
             </DragDrop>
           ) : null;
         })}
-        {/* @NOTE: 옵션 섹션 - (Preview Page) 답변 타입이 드롭다운인 경우 */}
-        {pageMode === "preview" && question.type === "dropdown" && (
-          <SelectBox index={index} type={question.type} pageMode={pageMode} />
-        )}
+        {/* @NOTE: 옵션 섹션 - (Preview Page 또는 Submit Page) 답변 타입이 드롭다운인 경우 */}
+        {(pageMode === "preview" || pageMode === "submit") &&
+          question.type === "dropdown" && (
+            <SelectBox index={index} type={question.type} pageMode={pageMode} />
+          )}
         {/* @NOTE: 옵션 추가 또는 기타 추가 */}
         {pageMode === "survey" &&
           question.isFocused &&
           ["radio", "checkbox", "dropdown"].includes(question.type) && (
             <ChoiceInputs
+              key={`${question.id}-${
+                question.optionList[question.optionList.length - 1].id
+              }`}
+              optionId={question.optionList[question.optionList.length - 1].id}
               index={index}
               editableMode={"read"}
               dropdownMode={"add"}

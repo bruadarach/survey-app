@@ -13,10 +13,11 @@ import IconClick from "../common/IconClick";
 import { IoClose } from "react-icons/io5";
 
 interface IChoiceInputs {
+  optionId: number;
   index: number;
   optionIndex?: number;
   type: string;
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   editableMode: "edit" | "read";
   dropdownMode: "add" | "edit";
   hasETC: boolean;
@@ -26,6 +27,7 @@ interface IChoiceInputs {
 }
 
 const ChoiceInputs = ({
+  optionId,
   index,
   optionIndex,
   type,
@@ -73,6 +75,7 @@ const ChoiceInputs = ({
     <Choice>
       {/* @NOTE: 옵션 아이콘 */}
       <ChoiceTypeIcon
+        optionId={optionId}
         type={type}
         index={index}
         optionIndex={optionIndex}
@@ -91,7 +94,8 @@ const ChoiceInputs = ({
           ...(isETC && isFocused
             ? { borderBottom: "1px dotted lightgray", cursor: "default" }
             : {}),
-          ...(pageMode === "preview" && type === "dropdown"
+          ...((pageMode === "preview" || pageMode === "submit") &&
+          type === "dropdown"
             ? { display: "none", paddingTop: "0px" }
             : {}),
         }}
