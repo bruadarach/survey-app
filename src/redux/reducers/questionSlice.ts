@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface Option {
   id: number;
   text: string;
+  isETC?: boolean;
 }
 
 interface Question {
@@ -14,6 +15,7 @@ interface Question {
   isRequired: boolean;
   isFocused: boolean;
   responses: string[];
+  isResponseSufficient?: boolean;
 }
 
 interface DragInfo {
@@ -32,11 +34,12 @@ export const initialState: IQuestionListProps = {
       id: Date.now(),
       title: "제목없는 질문",
       type: "radio",
-      optionList: [{ id: Date.now(), text: "옵션 1" }],
+      optionList: [{ id: Date.now(), text: "옵션 1", isETC: false }],
       hasETC: false,
       isRequired: false,
       isFocused: true,
       responses: [],
+      isResponseSufficient: true,
     },
   ],
   dragInfo: {
@@ -59,12 +62,14 @@ export const questionSlice = createSlice({
           {
             id: Date.now(),
             text: "옵션 1",
+            isETC: false,
           },
         ],
         hasETC: false,
         isRequired: false,
         isFocused: true,
         responses: [],
+        isResponseSufficient: true,
       };
       state.questions.splice(index + 1, 0, defaultQuestion);
     },
@@ -118,6 +123,7 @@ export const questionSlice = createSlice({
       const newOption = {
         id: Date.now(),
         text: `옵션 ${insertIndex + 1}`,
+        isETC: false,
       };
       question.optionList.splice(insertIndex, 0, newOption);
     },
@@ -128,14 +134,14 @@ export const questionSlice = createSlice({
         question.optionList.push({
           id: Date.now(),
           text: "기타",
+          isETC: true,
         });
         question.hasETC = true;
       }
     },
     deleteOption(state, action) {
       const { index, optionIndex } = action.payload;
-      const isETCOption =
-        state.questions[index].optionList[optionIndex].text === "기타";
+      const isETCOption = state.questions[index].optionList[optionIndex].isETC;
       state.questions[index].optionList.splice(optionIndex, 1);
       if (isETCOption) state.questions[index].hasETC = false;
     },
@@ -150,20 +156,59 @@ export const questionSlice = createSlice({
     },
     setTextResponse(state, action) {
       const { index, text } = action.payload;
-      state.questions[index].responses[0] = text;
+      const question = state.questions[index];
+      if (question.isRequired && text.trim() === "") {
+        question.isResponseSufficient = false;
+      } else {
+        question.responses[0] = text;
+        question.isResponseSufficient = true;
+      }
     },
     setSingleChoiceResponse(state, action) {
       const { index, value } = action.payload;
       state.questions[index].responses[0] = value;
+      state.questions[index].isResponseSufficient = true;
     },
     setMultipleChoiceResponse(state, action) {
       const { index, value, checked } = action.payload;
+      const responseIndex = state.questions[index].responses.indexOf(value);
       if (checked) {
-        state.questions[index].responses.push(value);
-      } else
-        state.questions[index].responses = state.questions[
-          index
-        ].responses.splice(state.questions[index].responses.indexOf(value), 1);
+        if (responseIndex === -1) {
+          state.questions[index].responses.push(value);
+          state.questions[index].isResponseSufficient = true;
+        }
+      } else {
+        if (responseIndex !== -1) {
+          state.questions[index].responses.splice(responseIndex, 1);
+          if (state.questions[index].responses.length === 0)
+            state.questions[index].isResponseSufficient = false;
+        }
+      }
+    },
+    checkResponseSufficient(state) {
+      state.questions.forEach((question) => {
+        if (question.isRequired) {
+          if (question.type === "textShort" || question.type === "textLong") {
+            if (!question.responses[0] || question.responses[0].trim() === "") {
+              question.isResponseSufficient = false;
+            } else {
+              question.isResponseSufficient = true;
+            }
+          } else {
+            if (question.responses.length === 0) {
+              question.isResponseSufficient = false;
+            } else {
+              question.isResponseSufficient = true;
+            }
+          }
+        }
+      });
+    },
+    resetResponses(state) {
+      state.questions.forEach((question) => {
+        question.responses = [];
+        question.isResponseSufficient = true;
+      });
     },
     setDragIndex(state, action) {
       const { questionDragIndex, optionDragIndex } = action.payload;
@@ -180,7 +225,10 @@ export const questionSlice = createSlice({
           state.questions.splice(questionDropIndex, 0, item);
         }
         // @NOTE: 옵션폼 드래그 앤 드롭
-        if (state.dragInfo.optionDragIndex !== undefined) {
+        if (
+          state.dragInfo.optionDragIndex !== undefined &&
+          !state.questions[questionDragIndex].optionList[optionDropIndex].isETC
+        ) {
           const optionDragIndex = state.dragInfo.optionDragIndex;
           const item =
             state.questions[questionDragIndex].optionList[optionDragIndex];
@@ -215,6 +263,8 @@ export const {
   setTextResponse,
   setSingleChoiceResponse,
   setMultipleChoiceResponse,
+  checkResponseSufficient,
+  resetResponses,
   setDragIndex,
   setDND,
 } = questionSlice.actions;

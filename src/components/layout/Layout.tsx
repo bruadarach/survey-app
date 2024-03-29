@@ -7,11 +7,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 export default Layout;
 
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 768px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 7rem;
+  padding: 7rem 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

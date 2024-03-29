@@ -1,12 +1,14 @@
 import Layout from "../components/layout/Layout";
-import TitleContainer from "../components/title/TitleContainer";
-import FormContainer from "../components/form/FormContainer";
+import TitleContainer from "../components/containers/TitleContainer";
+import FormContainer from "../components/containers/FormContainer";
+import ButtonsContainer from "../components/containers/ButtonsContainer";
 
-const SurveyPage = () => {
+const SurveyPage = ({ pageMode }: { pageMode: "survey" | "preview" }) => {
   return (
     <Layout>
-      <TitleContainer />
-      <FormContainer />
+      <TitleContainer pageMode={pageMode} />
+      <FormContainer pageMode={pageMode} />
+      <ButtonsContainer pageMode={pageMode} />
     </Layout>
   );
 };

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-interface IIconWrapper {
+interface IIconClick {
   Icon: React.ElementType;
   onClick: () => void;
   style?: React.CSSProperties;
 }
 
-const IconWrapper = ({ Icon, onClick, style }: IIconWrapper) => {
+const IconClick = ({ Icon, onClick, style }: IIconClick) => {
   return (
     <Container onClick={onClick} style={style}>
       <Icon />
@@ -21,4 +21,4 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-export default IconWrapper;
+export default IconClick;

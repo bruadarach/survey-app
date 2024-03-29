@@ -1,14 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import SurveyPage from "./pages/SurveyPage";
-import PreviewPage from "./pages/PreviewPage";
-import SubmitPage from "./pages/SubmitPage";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<SurveyPage />} />
-      <Route path="/preview" element={<PreviewPage />} />
-      <Route path="/submit" element={<SubmitPage />} />
+      <Route path="/" element={<SurveyPage pageMode="survey" />} />
+      <Route path="/preview" element={<SurveyPage pageMode="preview" />} />
+      <Route path="/submit" element={<SurveyPage pageMode="preview" />} />
     </Routes>
   );
 };

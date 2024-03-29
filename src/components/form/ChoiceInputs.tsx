@@ -9,17 +9,19 @@ import {
 import styled from "styled-components";
 import ChoiceTypeIcon from "./ChoiceTypeIcon";
 import EditableDiv from "../common/EditableDiv";
-import IconWrapper from "../common/IconWrapper";
+import IconClick from "../common/IconClick";
 import { IoClose } from "react-icons/io5";
 
 interface IChoiceInputs {
   index: number;
   optionIndex?: number;
   type: string;
+  pageMode: "survey" | "preview";
   editableMode: "edit" | "read";
   dropdownMode: "add" | "edit";
   hasETC: boolean;
-  optionText?: string;
+  isETC?: boolean;
+  optionText: string;
   isFocused: boolean;
 }
 
@@ -27,9 +29,11 @@ const ChoiceInputs = ({
   index,
   optionIndex,
   type,
+  pageMode,
   editableMode,
   dropdownMode,
   hasETC,
+  isETC,
   optionText,
   isFocused,
 }: IChoiceInputs) => {
@@ -70,21 +74,25 @@ const ChoiceInputs = ({
       {/* @NOTE: 옵션 아이콘 */}
       <ChoiceTypeIcon
         type={type}
+        index={index}
         optionIndex={optionIndex}
         dropdownMode={dropdownMode}
+        pageMode={pageMode}
         hasETC={hasETC}
+        optionText={optionText}
       />
       <EditableDiv
-        contentEditable={
-          editableMode === "edit" && isFocused && optionText !== "기타"
-        }
+        contentEditable={editableMode === "edit" && isFocused && !isETC}
         onBlur={(e) => handleOptionContent(e, index, optionIndex!)}
         style={{
           ...(editableMode === "read" || !isFocused
             ? { borderBottom: "none" }
             : {}),
-          ...(optionText === "기타"
+          ...(isETC && isFocused
             ? { borderBottom: "1px dotted lightgray", cursor: "default" }
+            : {}),
+          ...(pageMode === "preview" && type === "dropdown"
+            ? { display: "none", paddingTop: "0px" }
             : {}),
         }}
       >
@@ -110,13 +118,18 @@ const ChoiceInputs = ({
         </OptionText>
       </EditableDiv>
       {/* @NOTE: 옵션 삭제 버튼 */}
-      {dropdownMode === "edit" && isFocused && optionListLength > 1 && (
-        <IconWrapper
-          Icon={IoClose}
-          onClick={() => handleDeleteOption(index, optionIndex!)}
-          style={{ color: "gray", fontSize: "22px" }}
-        />
-      )}
+      {dropdownMode === "edit" &&
+        isFocused &&
+        !(
+          (optionListLength === 1 && !hasETC) ||
+          (optionListLength === 2 && hasETC && !isETC)
+        ) && (
+          <IconClick
+            Icon={IoClose}
+            onClick={() => handleDeleteOption(index, optionIndex!)}
+            style={{ color: "gray", fontSize: "22px" }}
+          />
+        )}
     </Choice>
   );
 };
@@ -134,7 +147,6 @@ const Choice = styled.div`
 const OptionText = styled.div`
   font-size: 14px;
   padding: 10px 0;
-  margin-top: 3px;
 `;
 
 const AddOption = styled.div`
