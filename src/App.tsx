@@ -6,7 +6,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<SurveyPage pageMode="survey" />} />
       <Route path="/preview" element={<SurveyPage pageMode="preview" />} />
-      <Route path="/submit" element={<SurveyPage pageMode="preview" />} />
+      <Route path="/submit" element={<SurveyPage pageMode="submit" />} />
     </Routes>
   );
 };

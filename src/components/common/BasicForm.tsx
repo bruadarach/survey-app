@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface IBasicForm {
-  pageMode: "survey" | "preview";
+  pageMode: "survey" | "preview" | "submit";
   isTitleComponent: boolean;
   isFocused?: boolean;
   style?: React.CSSProperties;

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface Response {
+  id: number;
+  text: string;
+}
+
 interface Option {
   id: number;
   text: string;
@@ -14,7 +19,7 @@ interface Question {
   hasETC: boolean;
   isRequired: boolean;
   isFocused: boolean;
-  responses: string[];
+  responses: Response[];
   isResponseSufficient?: boolean;
 }
 
@@ -111,6 +116,7 @@ export const questionSlice = createSlice({
         state.questions[index].optionList = [
           { id: Date.now(), text: "옵션 1" },
         ];
+        state.questions[index].hasETC = false;
       }
     },
     addOption(state, action) {
@@ -160,36 +166,40 @@ export const questionSlice = createSlice({
       if (question.isRequired && text.trim() === "") {
         question.isResponseSufficient = false;
       } else {
-        question.responses[0] = text;
+        question.responses[0] = { id: Date.now(), text };
         question.isResponseSufficient = true;
       }
     },
     setSingleChoiceResponse(state, action) {
-      const { index, value } = action.payload;
-      state.questions[index].responses[0] = value;
+      const { index, optionId, value } = action.payload;
+      state.questions[index].responses[0] = { id: optionId, text: value };
       state.questions[index].isResponseSufficient = true;
     },
     setMultipleChoiceResponse(state, action) {
-      const { index, value, checked } = action.payload;
-      const responseIndex = state.questions[index].responses.indexOf(value);
+      const { index, optionId, value, checked } = action.payload;
+      const { responses } = state.questions[index];
+      const responseIndex = responses.findIndex(
+        (response) => response.id === optionId
+      );
       if (checked) {
         if (responseIndex === -1) {
-          state.questions[index].responses.push(value);
-          state.questions[index].isResponseSufficient = true;
+          responses.push({ id: optionId, text: value });
         }
       } else {
         if (responseIndex !== -1) {
-          state.questions[index].responses.splice(responseIndex, 1);
-          if (state.questions[index].responses.length === 0)
-            state.questions[index].isResponseSufficient = false;
+          responses.splice(responseIndex, 1);
         }
       }
+      state.questions[index].isResponseSufficient = responses.length > 0;
     },
     checkResponseSufficient(state) {
       state.questions.forEach((question) => {
         if (question.isRequired) {
           if (question.type === "textShort" || question.type === "textLong") {
-            if (!question.responses[0] || question.responses[0].trim() === "") {
+            if (
+              !question.responses[0] ||
+              question.responses[0].text.trim() === ""
+            ) {
               question.isResponseSufficient = false;
             } else {
               question.isResponseSufficient = true;
