@@ -8,8 +8,22 @@ interface IToggleButton {
 const ToggleButton = ({ isRequired, onClick }: IToggleButton) => {
   const themeMode = isRequired ? "light" : "dark";
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      onClick();
+    }
+  };
+
   return (
-    <Button $themeMode={themeMode} onClick={onClick}>
+    <Button
+      role="checkbox"
+      $themeMode={themeMode}
+      onClick={onClick}
+      aria-checked={isRequired}
+      onKeyDown={handleKeyPress}
+      tabIndex={0}
+      aria-label={isRequired ? "Required" : "Optional"}
+    >
       <Circle $themeMode={themeMode} />
     </Button>
   );

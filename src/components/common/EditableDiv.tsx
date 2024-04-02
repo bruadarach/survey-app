@@ -18,6 +18,8 @@ const EditableDiv = ({
   return (
     <Div
       role="textbox"
+      aria-label={placeholder || "Enter text here"}
+      aria-multiline="true"
       tabIndex={0}
       placeholder={placeholder}
       contentEditable={contentEditable}
@@ -45,7 +47,8 @@ const Div = styled.div<IEditableDiv>`
   }
 
   &:empty::before {
-    content: ${(props) => `"${props.placeholder}"`};
+    content: ${(props) =>
+      props.placeholder ? `"${props.placeholder}"` : "normal"};
     color: #555;
   }
 `;
