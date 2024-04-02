@@ -7,7 +7,7 @@ import {
 } from "../../redux/reducers/questionSlice";
 import styled from "styled-components";
 import IconClick from "../common/IconClick";
-import { GoPencil } from "react-icons/go";
+import { GoPencil } from "@react-icons/all-files/go/GoPencil";
 
 const ButtonsContainer = ({
   pageMode,
@@ -48,10 +48,25 @@ const ButtonsContainer = ({
 
   return (
     <Container $pageMode={pageMode}>
-      <Button onClick={navigateToSubmitPage}>제출</Button>
-      <NoBgButton onClick={handleResetResponses}>양식 지우기</NoBgButton>
+      <Button
+        type="button"
+        onClick={navigateToSubmitPage}
+        aria-label="submit button"
+        tabIndex={0}
+      >
+        제출
+      </Button>
+      <NoBgButton
+        type="button"
+        onClick={handleResetResponses}
+        aria-label="clear all responses"
+        tabIndex={0}
+      >
+        양식 지우기
+      </NoBgButton>
       <IconClick
         Icon={GoPencil}
+        areaLabel="navigate to survey page"
         onClick={navigateToSurveyPage}
         style={{
           position: "fixed",

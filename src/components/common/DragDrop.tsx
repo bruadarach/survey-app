@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MdDragIndicator } from "react-icons/md";
+import { BsThreeDotsVertical } from "@react-icons/all-files/bs/BsThreeDotsVertical";
 
 interface IDragDrop {
   pageMode: "survey" | "preview" | "submit";
@@ -30,8 +30,11 @@ const DragDrop = ({
       onDragOver={(e) => e.preventDefault()}
       onDrop={onDrop}
       style={style}
+      aria-label="drag and drop item"
     >
-      {pageMode === "survey" && isFocused && <Icon $mode={mode} />}
+      {pageMode === "survey" && isFocused && (
+        <Icon $mode={mode} aria-hidden="true" />
+      )}
       {children}
     </IconWrapper>
   );
@@ -39,16 +42,16 @@ const DragDrop = ({
 
 export default DragDrop;
 
-const Icon = styled(MdDragIndicator)<{ $mode: "horizontal" | "vertical" }>`
+const Icon = styled(BsThreeDotsVertical)<{ $mode: "horizontal" | "vertical" }>`
   color: #bdbdbd;
-  font-size: 23px;
+  font-size: ${({ $mode }) => ($mode === "vertical" ? "20px" : "24px")};
   z-index: 5;
   cursor: move;
   visibility: ${({ $mode }) => ($mode === "horizontal" ? "visible" : "hidden")};
   transform: ${({ $mode }) =>
     $mode === "horizontal" ? "rotate(90deg)" : "none"};
   position: absolute;
-  top: ${({ $mode }) => ($mode === "vertical" ? "8px" : "0")};
+  top: ${({ $mode }) => ($mode === "vertical" ? "10px" : "0")};
   left: ${({ $mode }) => ($mode === "vertical" ? "-19px" : "50%")};
 `;
 
