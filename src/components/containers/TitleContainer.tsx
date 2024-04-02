@@ -85,7 +85,7 @@ const TitleContainer = ({ pageMode }: ITitleContainer) => {
           <div
             style={{
               fontSize: "14px",
-              color: "red",
+              color: "#b30000",
               borderTop: "1px solid #ddd",
               paddingTop: "13px",
             }}
