@@ -12,7 +12,7 @@ const SurveyPage = ({
     <Layout>
       <TitleContainer pageMode={pageMode} />
       <FormContainer pageMode={pageMode} />
-      <ButtonsContainer pageMode={pageMode} />
+      {pageMode === "preview" && <ButtonsContainer pageMode={pageMode} />}
     </Layout>
   );
 };
