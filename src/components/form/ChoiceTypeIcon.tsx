@@ -68,34 +68,40 @@ const ChoiceTypeIcon = ({
     <>
       {/* @NOTE: 객관식 질문, 체크박스인 경우 */}
       {["radio", "checkbox"].includes(type) ? (
-        <input
-          name={type === "radio" ? index?.toString() : `${index}-${optionId}`}
-          type={type}
-          value={optionText || ""}
-          checked={
-            pageMode === "preview" || pageMode === "submit"
-              ? type === "radio"
-                ? isCheckedForRadio
-                : isCheckedForCheckbox
-              : false
-          }
-          onChange={
-            pageMode === "preview"
-              ? (e) => handleChoiceResponse(e, type)
-              : undefined
-          }
-          disabled={pageMode !== "preview"}
-          style={{
-            pointerEvents: pageMode === "survey" ? "none" : "auto",
-            marginLeft: "7px",
-            marginBottom: "5px",
-            opacity: "0.5",
-          }}
-        />
+        <>
+          <input
+            id={`${index}-${optionId}`}
+            name={type === "radio" ? index?.toString() : `${index}-${optionId}`}
+            type={type}
+            value={optionText || ""}
+            checked={
+              pageMode === "preview" || pageMode === "submit"
+                ? type === "radio"
+                  ? isCheckedForRadio
+                  : isCheckedForCheckbox
+                : false
+            }
+            onChange={
+              pageMode === "preview"
+                ? (e) => handleChoiceResponse(e, type)
+                : undefined
+            }
+            disabled={pageMode !== "preview"}
+            style={{
+              pointerEvents: pageMode === "survey" ? "none" : "auto",
+              marginLeft: "7px",
+              marginBottom: "5px",
+              opacity: "0.5",
+            }}
+            tabIndex={pageMode === "preview" ? 0 : -1}
+            aria-label={type === "radio" ? "radio icon" : "checkbox icon"}
+          />
+        </>
       ) : // @NOTE: 드롭다운인 경우
       pageMode === "survey" && type === "dropdown" ? (
         <span
           style={{ marginLeft: "10px", marginBottom: "3px", fontSize: "15px" }}
+          aria-label="dropdown number listing"
         >
           {dropdownMode === "edit" && optionIndex !== undefined
             ? optionIndex + 1

@@ -10,7 +10,7 @@ import styled from "styled-components";
 import ChoiceTypeIcon from "./ChoiceTypeIcon";
 import EditableDiv from "../common/EditableDiv";
 import IconClick from "../common/IconClick";
-import { IoClose } from "react-icons/io5";
+import { IoClose } from "@react-icons/all-files/io5/IoClose";
 
 interface IChoiceInputs {
   optionId: number;
@@ -129,6 +129,7 @@ const ChoiceInputs = ({
           (optionListLength === 2 && hasETC && !isETC)
         ) && (
           <IconClick
+            areaLabel="delete option"
             Icon={IoClose}
             onClick={() => handleDeleteOption(index, optionIndex!)}
             style={{ color: "gray", fontSize: "22px" }}

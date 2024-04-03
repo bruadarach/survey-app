@@ -7,8 +7,8 @@ import {
 import { setIsTitleFocused } from "../../redux/reducers/titleSlice";
 import styled from "styled-components";
 import IconClick from "../common/IconClick";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { IoMdAddCircleOutline } from "@react-icons/all-files/io/IoMdAddCircleOutline";
+import { FiEye } from "@react-icons/all-files/fi/FiEye";
 
 const FloatingButtons = ({ index }: { index: number }) => {
   const dispatch = useDispatch();
@@ -27,12 +27,14 @@ const FloatingButtons = ({ index }: { index: number }) => {
   return (
     <Container>
       <IconClick
+        areaLabel={"add question button"}
         Icon={IoMdAddCircleOutline}
         onClick={() => handleAddQuestion(index)}
         style={{ color: "gray", fontSize: "24px" }}
       />
       <IconClick
-        Icon={MdOutlineRemoveRedEye}
+        areaLabel={"preview button"}
+        Icon={FiEye}
         onClick={navigateToPreview}
         style={{ color: "gray", fontSize: "24px" }}
       />

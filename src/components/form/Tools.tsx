@@ -11,8 +11,8 @@ import {
 import styled from "styled-components";
 import IconClick from "../common/IconClick";
 import ToggleButton from "./ToggleButton";
-import { FaRegCopy } from "react-icons/fa6";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { FaRegCopy } from "@react-icons/all-files/fa/FaRegCopy";
+import { RiDeleteBinLine } from "@react-icons/all-files/ri/RiDeleteBinLine";
 
 interface ITools {
   index: number;
@@ -56,12 +56,14 @@ const Tools = ({ index, isRequired }: ITools) => {
     <Container>
       {/* @NOTE: 질문폼 복사 */}
       <IconClick
+        areaLabel={"copy question"}
         Icon={FaRegCopy}
         onClick={() => handleCopyQuestion(index)}
         style={{ color: "gray", fontSize: "20px" }}
       />
       {/* @NOTE: 질문폼 삭제 */}
       <IconClick
+        areaLabel={"delete question"}
         Icon={RiDeleteBinLine}
         onClick={() => handleDeleteQuestion(index)}
         style={{ color: "gray", fontSize: "23px" }}

@@ -19,10 +19,11 @@ const BasicForm = ({
 }: IBasicForm) => {
   return (
     <Form tabIndex={0} onFocus={onFocus} style={style}>
-      <HeaderBar $isTitleComponent={isTitleComponent} />
+      <HeaderBar $isTitleComponent={isTitleComponent} aria-hidden="true" />
       <SideBar
         $isTitleComponent={isTitleComponent}
         $isFocused={pageMode === "survey" && isFocused}
+        aria-hidden="true"
       />
       <Contents>{children}</Contents>
     </Form>
