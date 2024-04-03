@@ -237,6 +237,10 @@ export const questionSlice = createSlice({
         // @NOTE: 옵션폼 드래그 앤 드롭
         if (
           state.dragInfo.optionDragIndex !== undefined &&
+          state.questions[questionDragIndex].optionList &&
+          optionDropIndex >= 0 &&
+          optionDropIndex <
+            state.questions[questionDragIndex].optionList.length &&
           !state.questions[questionDragIndex].optionList[optionDropIndex].isETC
         ) {
           const optionDragIndex = state.dragInfo.optionDragIndex;
