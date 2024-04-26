@@ -11,6 +11,7 @@ This project aims to develop core functionalities of Google Forms with dynamic f
 ## Goals
 - Manage all states with Redux Toolkit for efficient and predictable state management.
 - Develop reusable components for dynamic form and page management across various modes.
+- Enhance performance, accessibility, and overall user experience by optimizing Lighthouse performance metrics.
 
 ## Implemented Features
 - Survey Page
